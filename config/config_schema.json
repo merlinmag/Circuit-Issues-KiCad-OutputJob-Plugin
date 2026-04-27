@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KiCad Post-Design Export Plugin Config",
+  "type": "object",
+  "required": ["paths", "exports", "integrations", "renders"],
+  "properties": {
+    "paths": {
+      "type": "object",
+      "required": ["sch_pdf", "step", "manufacturing", "renders"],
+      "properties": {
+        "sch_pdf": {"type": "string", "minLength": 1},
+        "step": {"type": "string", "minLength": 1},
+        "manufacturing": {"type": "string", "minLength": 1},
+        "renders": {"type": "string", "minLength": 1}
+      }
+    },
+    "exports": {"type": "object"},
+    "integrations": {"type": "object"},
+    "renders": {"type": "object"},
+    "strict_relative_paths": {"type": "boolean"}
+  }
+}
