@@ -21,8 +21,8 @@
             "status": "stable",
             "kicad_version": "9.0",
             "download_url": "https://github.com/merlinmag/Circuit-Issues-KiCad-OutputJob-Plugin/releases/download/v1.0.0/circuit-issues-outputjob-v1.0.0.zip",
-            "download_sha256": "aae2fa3d41a30892941d6c6291516bfcf692765c880fb58440cf45a87e862cac",
-            "install_size": 48573
+            "download_sha256": "213baa0dbf3c317065a328739de8cb2fc3bc5417ceb7cca5c027e35c165a4d85",
+            "install_size": 48592
         }
     ]
 }
