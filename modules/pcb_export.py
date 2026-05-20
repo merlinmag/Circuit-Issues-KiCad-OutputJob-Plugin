@@ -29,6 +29,8 @@ def generate_step(board_file: Path, output_path: Path) -> CommandResult:
         "pcb",
         "export",
         "step",
+        "--include-silkscreen",
+        "--include-soldermask",
         "--subst-models",
         "--force",
         "--output",
