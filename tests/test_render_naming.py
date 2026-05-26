@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
-from kicad_library_automation.modules.pcb_export import _cli_render_quality, default_render_map
+from kicad_library_automation.modules.pcb_export import _cli_render_quality, default_render_map, generate_render
 
 
 class RenderNamingTests(unittest.TestCase):
@@ -21,6 +23,23 @@ class RenderNamingTests(unittest.TestCase):
         self.assertEqual(m["right"][3], "myboard_PCBA_RIGHT.png")
         self.assertEqual(m["iso1"][3], "myboard_PCBA_ISO1.png")
         self.assertEqual(m["iso2"][3], "myboard_PCBA_ISO2.png")
+
+    def test_generate_render_uses_board_stackup_colors(self) -> None:
+        board_file = Path("C:/tmp/example.kicad_pcb")
+        output_path = Path("C:/tmp/example.png")
+
+        with patch("kicad_library_automation.modules.pcb_export.kicad_cli_executable", return_value="kicad-cli"), patch(
+            "kicad_library_automation.modules.pcb_export.run_command"
+        ) as run_command:
+            run_command.return_value.ok = True
+            run_command.return_value.return_code = 0
+            run_command.return_value.stdout = ""
+            run_command.return_value.stderr = ""
+
+            generate_render(board_file, output_path, side="top")
+
+        cmd = run_command.call_args.args[0]
+        self.assertIn("--use-board-stackup-colors", cmd)
 
 
 if __name__ == "__main__":

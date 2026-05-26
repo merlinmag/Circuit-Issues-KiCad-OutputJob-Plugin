@@ -128,6 +128,7 @@ def generate_render(
         str(height),
         "--background",
         "opaque",
+        "--use-board-stackup-colors",
     ]
     if azimuth is not None and elevation is not None:
         cmd += ["--rotate", f"{int(elevation)},0,{int(azimuth)}"]
