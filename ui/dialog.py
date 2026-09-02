@@ -119,11 +119,20 @@ if wx is not None:
             preset_row.Add(wx.StaticText(scrolled, label="Gerber Layers"), 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
             preset_choices = [
                 "2-layer default (F/B Cu+Paste+Mask+Silk+Edge)",
+                "4-layer (F/B Cu + 2 inner Cu + Paste/Mask/Silk/Edge)",
+                "6-layer (F/B Cu + 4 inner Cu + Paste/Mask/Silk/Edge)",
+                "8-layer (F/B Cu + 6 inner Cu + Paste/Mask/Silk/Edge)",
                 "All enabled board layers",
             ]
             preset_choice = wx.Choice(scrolled, choices=preset_choices)
             preset_key = str(self._cfg_get("exports", "gerber_layer_preset", "2_layer_default"))
-            preset_index = 0 if preset_key == "2_layer_default" else 1
+            preset_index = {
+                "2_layer_default": 0,
+                "4_layer": 1,
+                "6_layer": 2,
+                "8_layer": 3,
+                "all_enabled": 4,
+            }.get(preset_key, 0)
             preset_choice.SetSelection(preset_index)
             self._choice_ctrls["exports.gerber_layer_preset"] = preset_choice
             preset_row.Add(preset_choice, 1, wx.ALL | wx.EXPAND, 4)
@@ -255,7 +264,13 @@ if wx is not None:
                 section, item = key.split(".", 1)
                 selected = int(ctrl.GetSelection())
                 if key == "exports.gerber_layer_preset":
-                    cfg[section][item] = "2_layer_default" if selected <= 0 else "all_enabled"
+                    cfg[section][item] = {
+                        0: "2_layer_default",
+                        1: "4_layer",
+                        2: "6_layer",
+                        3: "8_layer",
+                        4: "all_enabled",
+                    }.get(selected, "2_layer_default")
                 elif key == "renders.quality":
                     cfg[section][item] = {0: "low", 1: "medium", 2: "high"}.get(selected, "medium")
             for key, ctrl in self._angle_ctrls.items():

@@ -14,7 +14,15 @@
         "renders": {"type": "string", "minLength": 1}
       }
     },
-    "exports": {"type": "object"},
+    "exports": {
+      "type": "object",
+      "properties": {
+        "gerber_layer_preset": {
+          "type": "string",
+          "enum": ["2_layer_default", "4_layer", "6_layer", "8_layer", "all_enabled"]
+        }
+      }
+    },
     "integrations": {"type": "object"},
     "renders": {"type": "object"},
     "strict_relative_paths": {"type": "boolean"}

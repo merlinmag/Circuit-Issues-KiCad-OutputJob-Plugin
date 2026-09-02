@@ -24,7 +24,7 @@ class RenderNamingTests(unittest.TestCase):
         self.assertEqual(m["iso1"][3], "myboard_PCBA_ISO1.png")
         self.assertEqual(m["iso2"][3], "myboard_PCBA_ISO2.png")
 
-    def test_generate_render_uses_board_stackup_colors(self) -> None:
+    def test_generate_render_uses_pcb_editor_preset(self) -> None:
         board_file = Path("C:/tmp/example.kicad_pcb")
         output_path = Path("C:/tmp/example.png")
 
@@ -39,7 +39,8 @@ class RenderNamingTests(unittest.TestCase):
             generate_render(board_file, output_path, side="top")
 
         cmd = run_command.call_args.args[0]
-        self.assertIn("--use-board-stackup-colors", cmd)
+        self.assertIn("--preset", cmd)
+        self.assertIn("follow_pcb_editor", cmd)
 
 
 if __name__ == "__main__":
