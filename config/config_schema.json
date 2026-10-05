@@ -11,7 +11,8 @@
         "sch_pdf": {"type": "string", "minLength": 1},
         "step": {"type": "string", "minLength": 1},
         "manufacturing": {"type": "string", "minLength": 1},
-        "renders": {"type": "string", "minLength": 1}
+        "renders": {"type": "string", "minLength": 1},
+        "visual": {"type": "string", "minLength": 1}
       }
     },
     "exports": {
@@ -20,7 +21,16 @@
         "gerber_layer_preset": {
           "type": "string",
           "enum": ["2_layer_default", "4_layer", "6_layer", "8_layer", "all_enabled"]
-        }
+        },
+        "visual": {"type": "boolean"}
+      }
+    },
+    "checks": {
+      "type": "object",
+      "properties": {
+        "erc": {"type": "boolean"},
+        "drc": {"type": "boolean"},
+        "fail_on": {"type": "string", "enum": ["error", "warning", "never"]}
       }
     },
     "integrations": {"type": "object"},

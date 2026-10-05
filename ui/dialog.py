@@ -25,6 +25,7 @@ def _build_summary_text(results: Dict[str, Any]) -> str:
     """Build a multiline run summary for UI and logging fallback."""
     ok = results.get("ok", {}) if isinstance(results, dict) else {}
     failed = results.get("failed", {}) if isinstance(results, dict) else {}
+    skipped = results.get("skipped", {}) if isinstance(results, dict) else {}
     notes = results.get("notes", []) if isinstance(results, dict) else []
 
     lines = [
@@ -42,6 +43,12 @@ def _build_summary_text(results: Dict[str, Any]) -> str:
     if failed:
         lines.append("Failed:")
         for key, detail in failed.items():
+            lines.append(f"- {key}: {detail}")
+        lines.append("")
+
+    if skipped:
+        lines.append("Skipped:")
+        for key, detail in skipped.items():
             lines.append(f"- {key}: {detail}")
         lines.append("")
 
@@ -88,6 +95,7 @@ if wx is not None:
                 ("step", "STEP 3D"),
                 ("manufacturing", "BOM / Gerbers"),
                 ("renders", "3D Renders"),
+                ("visual", "Visual diff SVGs"),
             ):
                 row = wx.BoxSizer(wx.HORIZONTAL)
                 row.Add(wx.StaticText(scrolled, label=label), 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
@@ -109,6 +117,7 @@ if wx is not None:
                 ("position", "Position / PNP"),
                 ("bom_collapsed", "BOM (collapsed)"),
                 ("bom_line_by_line", "BOM (line-by-line)"),
+                ("visual", "SVGs for visual diff (schematic + PCB layers)"),
             ):
                 cb = wx.CheckBox(scrolled, label=label)
                 cb.SetValue(bool(self._cfg_get("exports", key, False)))
@@ -139,6 +148,22 @@ if wx is not None:
             exports_box.Add(preset_row, 0, wx.EXPAND)
 
             content.Add(exports_box, 0, wx.ALL | wx.EXPAND, 8)
+
+            checks_box = wx.StaticBoxSizer(wx.VERTICAL, scrolled, "Checks (run before exports)")
+            for key, label in (("erc", "ERC (schematic)"), ("drc", "DRC (board, with schematic parity)")):
+                cb = wx.CheckBox(scrolled, label=label)
+                cb.SetValue(bool(self._cfg_get("checks", key, True)))
+                self._check_ctrls[f"checks.{key}"] = cb
+                checks_box.Add(cb, 0, wx.ALL, 2)
+            fail_row = wx.BoxSizer(wx.HORIZONTAL)
+            fail_row.Add(wx.StaticText(scrolled, label="Report as failed on"), 0, wx.ALL | wx.ALIGN_CENTER_VERTICAL, 4)
+            fail_choice = wx.Choice(scrolled, choices=["Errors", "Errors and warnings", "Never"])
+            fail_key = str(self._cfg_get("checks", "fail_on", "error")).lower()
+            fail_choice.SetSelection({"error": 0, "warning": 1, "never": 2}.get(fail_key, 0))
+            self._choice_ctrls["checks.fail_on"] = fail_choice
+            fail_row.Add(fail_choice, 1, wx.ALL | wx.EXPAND, 4)
+            checks_box.Add(fail_row, 0, wx.EXPAND)
+            content.Add(checks_box, 0, wx.ALL | wx.EXPAND, 8)
 
             render_box = wx.StaticBoxSizer(wx.VERTICAL, scrolled, "3D Render Sides")
             hint = wx.StaticText(scrolled, label="Render time scales with number of views, quality, and resolution.")
@@ -259,9 +284,10 @@ if wx is not None:
                 cfg["paths"][key] = ctrl.GetValue().strip()
             for key, ctrl in self._check_ctrls.items():
                 section, item = key.split(".", 1)
-                cfg[section][item] = bool(ctrl.GetValue())
+                cfg.setdefault(section, {})[item] = bool(ctrl.GetValue())
             for key, ctrl in self._choice_ctrls.items():
                 section, item = key.split(".", 1)
+                cfg.setdefault(section, {})
                 selected = int(ctrl.GetSelection())
                 if key == "exports.gerber_layer_preset":
                     cfg[section][item] = {
@@ -273,6 +299,8 @@ if wx is not None:
                     }.get(selected, "2_layer_default")
                 elif key == "renders.quality":
                     cfg[section][item] = {0: "low", 1: "medium", 2: "high"}.get(selected, "medium")
+                elif key == "checks.fail_on":
+                    cfg[section][item] = {0: "error", 1: "warning", 2: "never"}.get(selected, "error")
             for key, ctrl in self._angle_ctrls.items():
                 cfg["renders"][key] = int(ctrl.GetValue().strip() or "0")
             return cfg

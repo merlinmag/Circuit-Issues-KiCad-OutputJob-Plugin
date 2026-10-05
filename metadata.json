@@ -2,7 +2,7 @@
     "$schema": "https://go.kicad.org/pcm/schemas/v1",
     "name": "Circuit Issues KiCad OutputJob Plugin",
     "description": "Generate common post-design outputs (Gerbers, BOM, STEP, renders, iBOM, JLCPCB) from one dialog",
-    "description_full": "An Action Plugin for KiCad 9/10 that consolidates common post-design export tasks into a single dialog. Supports schematic PDF, STEP 3D model, Gerbers, drill files, pick-and-place CSV, BOM CSV, 3D render PNGs, and optional integration with the JLC Plugin for KiCad and InteractiveHtmlBom. Settings are stored per-project in a local .kicad_plugin_config.json file.",
+    "description_full": "An Action Plugin for KiCad 9/10 that consolidates common post-design export tasks into a single dialog. Supports schematic PDF, STEP 3D model, Gerbers, drill files, pick-and-place CSV, BOM CSV, 3D render PNGs, SVGs for visual diffs, ERC/DRC checks with summary reports, and optional integration with the JLC Plugin for KiCad and InteractiveHtmlBom. Settings are stored per-project in a local .kicad_plugin_config.json file. Includes a headless CLI (cli.py) for CI servers.",
     "identifier": "com.github.merlinmag.circuit-issues-outputjob",
     "type": "plugin",
     "author": {
@@ -16,6 +16,12 @@
         "homepage": "https://github.com/merlinmag/Circuit-Issues-KiCad-OutputJob-Plugin"
     },
     "versions": [
+        {
+            "version": "1.1.0",
+            "status": "stable",
+            "kicad_version": "9.0",
+            "download_url": "https://github.com/merlinmag/Circuit-Issues-KiCad-OutputJob-Plugin/releases/download/v1.1.0/circuit-issues-outputjob-v1.1.0.zip"
+        },
         {
             "version": "1.0.0",
             "status": "stable",

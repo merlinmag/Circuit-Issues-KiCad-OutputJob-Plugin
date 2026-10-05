@@ -4,6 +4,11 @@ from __future__ import annotations
 
 import unittest
 
+try:
+    from . import _bootstrap  # noqa: F401  (python -m unittest discover -s tests -t .)
+except ImportError:
+    import _bootstrap  # noqa: F401  (python -m unittest discover -s tests)
+
 from kicad_library_automation.ui.dialog import _build_summary_text
 
 

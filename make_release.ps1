@@ -8,13 +8,13 @@
 # Output zip: .\dist\circuit-issues-outputjob-v<Version>.zip
 
 param(
-    [string]$Version = "1.0.0"
+    [string]$Version = "1.1.0"
 )
 
 $ErrorActionPreference = "Stop"
 
 $RepoRoot  = $PSScriptRoot
-$PluginDir = "kicad_library_automation"   # folder name KiCad uses on install
+$PluginDir = "plugins"   # PCM archive layout: plugin files under plugins/, metadata.json at the root
 $ZipName   = "circuit-issues-outputjob-v$Version.zip"
 $DistDir   = Join-Path $RepoRoot "dist"
 $ZipPath   = Join-Path $DistDir $ZipName
@@ -23,7 +23,7 @@ $StageDir  = Join-Path $env:TEMP "kicad_plugin_stage_$([System.Guid]::NewGuid().
 # Files / folders to include in the package
 $Include = @(
     "__init__.py",
-    "metadata.json",
+    "cli.py",
     "LICENSE",
     "config",
     "modules",
@@ -44,6 +44,8 @@ foreach ($item in $Include) {
         Write-Warning "Skipping missing item: $item"
     }
 }
+
+Copy-Item -Path (Join-Path $RepoRoot "metadata.json") -Destination (Join-Path $StageDir "metadata.json")
 
 # Create dist directory and zip
 $null = New-Item -ItemType Directory -Path $DistDir -Force

@@ -7,15 +7,15 @@
     "visual": "doc/visual"
   },
   "exports": {
-    "sch_pdf": false,
-    "step": false,
+    "sch_pdf": true,
+    "step": true,
     "gerbers": true,
     "gerber_layer_preset": "2_layer_default",
-    "drill": false,
-    "position": false,
-    "bom_collapsed": false,
-    "bom_line_by_line": false,
-    "visual": false
+    "drill": true,
+    "position": true,
+    "bom_collapsed": true,
+    "bom_line_by_line": true,
+    "visual": true
   },
   "checks": {
     "erc": true,
@@ -24,22 +24,17 @@
   },
   "integrations": {
     "jlcpcb": false,
-    "ibom": false
+    "ibom": true
   },
   "renders": {
-    "top": false,
+    "top": true,
     "bottom": false,
     "left": false,
     "right": false,
     "iso1": false,
     "iso2": false,
-    "iso1_az": 45,
-    "iso1_el": 35,
-    "iso2_az": 225,
-    "iso2_el": 35,
-    "quality": "medium",
-    "width": 1920,
-    "height": 1080
-  },
-  "strict_relative_paths": true
+    "quality": "low",
+    "width": 640,
+    "height": 360
+  }
 }

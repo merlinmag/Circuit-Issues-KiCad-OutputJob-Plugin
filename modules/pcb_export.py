@@ -106,8 +106,12 @@ def generate_render(
     quality: str = "high",
     width: int = 3840,
     height: int = 2160,
+    cmd_prefix: Optional[List[str]] = None,
 ) -> CommandResult:
-    """Render 3D board image to PNG."""
+    """Render 3D board image to PNG.
+
+    ``cmd_prefix`` wraps the command (e.g. ``["xvfb-run", "-a"]`` on a headless server).
+    """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     cli_quality = _cli_render_quality(quality)
     width = max(1, int(width))
@@ -134,7 +138,7 @@ def generate_render(
     if azimuth is not None and elevation is not None:
         cmd += ["--rotate", f"{int(elevation)},0,{int(azimuth)}"]
     cmd.append(str(board_file))
-    result = run_command(cmd, cwd=board_file.parent)
+    result = run_command(list(cmd_prefix or []) + cmd, cwd=board_file.parent)
     result.output_path = output_path
     return result
 

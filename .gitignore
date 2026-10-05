@@ -3,3 +3,16 @@ __pycache__/
 *.pyo
 dist/
 .kicad_plugin_config.json
+!tests/fixtures/ci_fixture/.kicad_plugin_config.json
+
+# Outputs of `python3 cli.py tests/fixtures/ci_fixture`
+tests/fixtures/ci_fixture/reports/
+tests/fixtures/ci_fixture/doc/
+tests/fixtures/ci_fixture/3d/
+tests/fixtures/ci_fixture/manufacturing/
+tests/fixtures/ci_fixture/renders/
+tests/fixtures/ci_fixture/bom/
+tests/fixtures/ci_fixture/production/
+tests/fixtures/ci_fixture/*.kicad_prl
+tests/fixtures/ci_fixture/*-backups/
+tests/fixtures/ci_fixture/fp-info-cache

@@ -1,0 +1,24 @@
+{
+  "board": {
+    "design_settings": {
+      "drc_exclusions": []
+    }
+  },
+  "erc": {
+    "erc_exclusions": []
+  },
+  "meta": {
+    "filename": "ci_fixture.kicad_pro",
+    "version": 3
+  },
+  "sheets": [
+    [
+      "c1cc6555-08df-580c-a442-696b243c0c73",
+      "Root"
+    ],
+    [
+      "ed22662c-d8d1-5e9c-8571-ead66a437b16",
+      "LEDs"
+    ]
+  ]
+}

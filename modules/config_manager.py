@@ -8,6 +8,7 @@ from typing import Any, Dict
 
 
 CONFIG_FILENAME = ".kicad_plugin_config.json"
+FAIL_ON_CHOICES = ("error", "warning", "never")
 _DEFAULTS_PATH = Path(__file__).resolve().parent.parent / "config" / "config_defaults.json"
 
 
@@ -59,6 +60,31 @@ def validate_config(cfg: Dict[str, Any], project_root: Path) -> None:
         if path_key not in cfg["paths"] or not isinstance(cfg["paths"][path_key], str):
             raise ValueError(f"Missing or invalid path setting: {path_key}")
         resolve_relative_output(project_root, cfg["paths"][path_key])
+
+    visual = cfg["paths"].get("visual")
+    if visual is not None:
+        if not isinstance(visual, str) or not visual:
+            raise ValueError("Missing or invalid path setting: visual")
+        resolve_relative_output(project_root, visual)
+
+    checks = cfg.get("checks")
+    if checks is not None:
+        if not isinstance(checks, dict):
+            raise ValueError("Missing or invalid config section: checks")
+        for key in ("erc", "drc"):
+            if key in checks and not isinstance(checks[key], bool):
+                raise ValueError(f"Invalid checks.{key}: expected true/false")
+        if str(checks.get("fail_on", "error")) not in FAIL_ON_CHOICES:
+            raise ValueError(f"Invalid checks.fail_on: {checks.get('fail_on')!r} (expected one of {', '.join(FAIL_ON_CHOICES)})")
+
+
+def load_config_file(config_path: Path, project_root: Path) -> Dict[str, Any]:
+    """Load defaults, then overlay an explicit config file (e.g. ``cli.py --config``)."""
+    with Path(config_path).open("r", encoding="utf-8") as f:
+        saved = json.load(f)
+    merged = deep_merge(load_defaults(), saved)
+    validate_config(merged, project_root)
+    return merged
 
 
 def load_config(project_root: Path) -> Dict[str, Any]:

@@ -6,6 +6,11 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+try:
+    from . import _bootstrap  # noqa: F401  (python -m unittest discover -s tests -t .)
+except ImportError:
+    import _bootstrap  # noqa: F401  (python -m unittest discover -s tests)
+
 from kicad_library_automation.modules.pcb_export import _cli_render_quality, default_render_map, generate_render
 
 
