@@ -63,7 +63,7 @@ def validate_config(cfg: Dict[str, Any], project_root: Path) -> None:
 
     visual = cfg["paths"].get("visual")
     if visual is not None:
-        if not isinstance(visual, str) or not visual:
+        if not isinstance(visual, str):
             raise ValueError("Missing or invalid path setting: visual")
         resolve_relative_output(project_root, visual)
 

@@ -46,7 +46,8 @@ def _plugin_search_dirs() -> List[Path]:
 
 
 def _looks_like_target(path: Path, aliases: Tuple[str, ...]) -> bool:
-    txt = str(path).lower()
+    # Match the folder name only, so a search root like /opt/jlc-tools does not match every child.
+    txt = path.name.lower()
     return any(alias in txt for alias in aliases)
 
 
@@ -54,7 +55,7 @@ def _candidate_package_dirs(aliases: Tuple[str, ...]) -> List[Path]:
     """Find plugin package directories by name heuristics."""
     found: List[Path] = []
     for root in _plugin_search_dirs():
-        for child in root.iterdir():
+        for child in sorted(root.iterdir()):
             if child.is_dir() and _looks_like_target(child, aliases):
                 found.append(child)
     # Keep order stable while removing duplicates.
