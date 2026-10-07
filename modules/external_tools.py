@@ -155,8 +155,12 @@ def _run_jlc_in_process(package_dir: Path, board_path: Path) -> Tuple[bool, str]
         options_mod.AUTO_FILL_OPT: True,
         options_mod.EXCLUDE_DNP_OPT: False,
         options_mod.OPEN_BROWSER_OPT: False,
-        options_mod.NO_BACKUP_OPT: False,
     }
+    # JLC 5.3.0 renamed NO_BACKUP_OPT to BACKUP_OPT; use the plugin's own default for either name.
+    if hasattr(options_mod, "BACKUP_OPT"):
+        default_options[options_mod.BACKUP_OPT] = True
+    else:
+        default_options[options_mod.NO_BACKUP_OPT] = False
     options = utils_mod.load_user_options(default_options)
     options[options_mod.OPEN_BROWSER_OPT] = False
 
