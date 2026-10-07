@@ -58,11 +58,11 @@ class ExternalToolsTests(unittest.TestCase):
         self.env.stop()
         self._td.cleanup()
 
-    def _install_fake_jlc(self) -> Path:
+    def _install_fake_jlc(self, backup_opt: str = "NO_BACKUP_OPT") -> Path:
         pkg = self.plugins / "com_github_bennymeg_JLC-Plugin-for-KiCad"
         pkg.mkdir()
         for name, text in FAKE_JLC.items():
-            (pkg / name).write_text(text, encoding="utf-8")
+            (pkg / name).write_text(text.replace("NO_BACKUP_OPT", backup_opt), encoding="utf-8")
         return pkg
 
     def test_plugin_dirs_env_override_replaces_defaults(self) -> None:
@@ -82,6 +82,11 @@ class ExternalToolsTests(unittest.TestCase):
         self.assertTrue(ok, message)
         self.assertIn("production", message)
         self.assertTrue((self.project / "production" / "GERBER-board.zip").exists())
+
+    def test_jlc_headless_supports_5_3_backup_option(self) -> None:
+        self._install_fake_jlc(backup_opt="BACKUP_OPT")
+        ok, message = external_tools.run_jlcpcb_plugin(self.board, headless=True)
+        self.assertTrue(ok, message)
 
     def test_jlc_missing_board_fails(self) -> None:
         self._install_fake_jlc()
