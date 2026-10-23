@@ -46,6 +46,13 @@ def _build_summary_text(results: Dict[str, Any]) -> str:
             lines.append(f"- {key}: {detail}")
         lines.append("")
 
+    dnp = (results.get("checks", {}) or {}).get("dnp") if isinstance(results, dict) else None
+    if dnp and dnp.get("violations"):
+        lines.append("DNP mismatches (run Tools > Update PCB from Schematic):")
+        for violation in dnp["violations"]:
+            lines.append(f"- {violation.get('description', '')}")
+        lines.append("")
+
     if skipped:
         lines.append("Skipped:")
         for key, detail in skipped.items():
@@ -150,7 +157,11 @@ if wx is not None:
             content.Add(exports_box, 0, wx.ALL | wx.EXPAND, 8)
 
             checks_box = wx.StaticBoxSizer(wx.VERTICAL, scrolled, "Checks (run before exports)")
-            for key, label in (("erc", "ERC (schematic)"), ("drc", "DRC (board, with schematic parity)")):
+            for key, label in (
+                ("erc", "ERC (schematic)"),
+                ("drc", "DRC (board, with schematic parity)"),
+                ("dnp", "DNP / BOM / position attributes match between schematic and PCB"),
+            ):
                 cb = wx.CheckBox(scrolled, label=label)
                 cb.SetValue(bool(self._cfg_get("checks", key, True)))
                 self._check_ctrls[f"checks.{key}"] = cb

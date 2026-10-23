@@ -30,6 +30,7 @@
       "properties": {
         "erc": {"type": "boolean"},
         "drc": {"type": "boolean"},
+        "dnp": {"type": "boolean"},
         "fail_on": {"type": "string", "enum": ["error", "warning", "never"]}
       }
     },

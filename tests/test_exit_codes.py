@@ -154,11 +154,11 @@ class ExitCodeTests(unittest.TestCase):
 class PlannedStepTests(unittest.TestCase):
     def test_checks_run_first_and_follow_config(self) -> None:
         cfg = load_defaults()
-        self.assertEqual(planned_steps(cfg), ["erc", "drc", "gerbers"])
+        self.assertEqual(planned_steps(cfg), ["erc", "drc", "dnp", "gerbers"])
 
     def test_only_overrides_enable_flags_and_expands_groups(self) -> None:
         cfg = load_defaults()
-        self.assertEqual(planned_steps(cfg, ["bom", "visual", "checks"]), ["erc", "drc", "bom_line_by_line", "bom_collapsed", "visual"])
+        self.assertEqual(planned_steps(cfg, ["bom", "visual", "checks"]), ["erc", "drc", "dnp", "bom_line_by_line", "bom_collapsed", "visual"])
         self.assertEqual(planned_steps(cfg, ["renders"]), ["render_top"])
 
     def test_unknown_only_step_raises(self) -> None:

@@ -20,6 +20,7 @@
   "checks": {
     "erc": true,
     "drc": true,
+    "dnp": true,
     "fail_on": "error"
   },
   "integrations": {
