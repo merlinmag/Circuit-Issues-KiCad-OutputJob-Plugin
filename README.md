@@ -225,6 +225,14 @@ Older versions wrote `kicad_postdesign_export.log` to the project root; it can b
 
 ## Development
 
+Build a release zip for KiCad's Plugin and Content Manager (any OS; `make_release.ps1` does the same on Windows):
+
+```bash
+python3 make_release.py --version 1.2.0   # -> dist/circuit-issues-outputjob-v1.2.0.zip + metadata.json values
+```
+
+Attach the zip to the GitHub release `v<version>` so the `download_url` in `metadata.json` resolves.
+
 Run tests from the repository root (the integration test is skipped when `kicad-cli` is missing):
 
 ```bash
