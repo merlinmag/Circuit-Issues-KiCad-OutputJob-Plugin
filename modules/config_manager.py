@@ -71,7 +71,7 @@ def validate_config(cfg: Dict[str, Any], project_root: Path) -> None:
     if checks is not None:
         if not isinstance(checks, dict):
             raise ValueError("Missing or invalid config section: checks")
-        for key in ("erc", "drc"):
+        for key in ("erc", "drc", "dnp"):
             if key in checks and not isinstance(checks[key], bool):
                 raise ValueError(f"Invalid checks.{key}: expected true/false")
         if str(checks.get("fail_on", "error")) not in FAIL_ON_CHOICES:

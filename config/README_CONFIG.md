@@ -10,6 +10,7 @@ Key rules:
 - All output paths are relative to the `.kicad_pro` directory.
 - Absolute paths are rejected.
 - Paths and checkbox states are restored on next run.
-- `checks` (`erc`, `drc`, `fail_on`: `error` | `warning` | `never`) controls the ERC/DRC step that runs first.
+- `checks` (`erc`, `drc`, `dnp`, `fail_on`: `error` | `warning` | `never`) controls the ERC/DRC/DNP checks that run first.
+  `dnp` compares DNP, exclude-from-BOM and exclude-from-position-files between schematic symbols and PCB footprints.
 - `exports.visual` + `paths.visual` control the SVG export for visual diffs.
 - Settings missing from a saved file are taken from `config_defaults.json`.

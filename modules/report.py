@@ -75,7 +75,7 @@ def _violation_lines(kind: str, data: Dict[str, Any]) -> List[str]:
         location = v.get("location", "")
         # ERC JSON positions use a different internal scale than the stated units, so only
         # DRC locations get a unit suffix.
-        if location and data.get("units") and kind == "drc":
+        if location and data.get("units") and kind in ("drc", "dnp"):
             location = f"{location} {data['units']}"
         lines.append(
             f"| {_md_escape(v.get('severity', ''))} | `{_md_escape(v.get('type', ''))}` | {_short(description)} | {_md_escape(location)} |"
@@ -89,7 +89,7 @@ def build_markdown(results: Dict[str, Any]) -> str:
     status_text = {
         "ok": "OK",
         "failed": "FAILED (some exports failed)",
-        "checks_failed": "CHECKS FAILED (ERC/DRC)",
+        "checks_failed": "CHECKS FAILED (ERC/DRC/DNP)",
     }[summary["status"]]
     lines = [
         f"KiCad outputs for {summary['project']}: {status_text}",
@@ -108,6 +108,12 @@ def build_markdown(results: Dict[str, Any]) -> str:
         if kind == "drc":
             text += f" ({data.get('unconnected', 0)} unconnected, {data.get('parity', 0)} schematic parity)"
         lines.append(text)
+    if checks.get("dnp"):
+        data = checks["dnp"]
+        lines.append(
+            f"- DNP: {data.get('errors', 0)} schematic/PCB mismatches in {data.get('mismatched_parts', 0)} parts "
+            f"({data.get('dnp_parts', 0)} DNP parts, {data.get('compared', 0)} compared)"
+        )
     lines += ["", "| Step | Status | Duration | Detail |", "|---|---|---|---|"]
     for step in summary["steps"]:
         lines.append(
@@ -116,7 +122,7 @@ def build_markdown(results: Dict[str, Any]) -> str:
     lines.append("")
 
     violation_lines: List[str] = []
-    for kind in ("erc", "drc"):
+    for kind in ("erc", "drc", "dnp"):
         if checks.get(kind):
             violation_lines += _violation_lines(kind, checks[kind])
     if violation_lines:

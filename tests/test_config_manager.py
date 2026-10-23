@@ -52,7 +52,7 @@ class ConfigManagerTests(unittest.TestCase):
 
     def test_defaults_include_checks_and_visual(self) -> None:
         defaults = load_defaults()
-        self.assertEqual(defaults["checks"], {"erc": True, "drc": True, "fail_on": "error"})
+        self.assertEqual(defaults["checks"], {"erc": True, "drc": True, "dnp": True, "fail_on": "error"})
         self.assertIn("visual", defaults["exports"])
         self.assertEqual(defaults["paths"]["visual"], "doc/visual")
 
@@ -79,7 +79,7 @@ class ConfigManagerTests(unittest.TestCase):
             root = Path(td)
             config_file_path(root).write_text(json.dumps({"checks": {"fail_on": "warning"}}), encoding="utf-8")
             cfg = load_config(root)
-            self.assertEqual(cfg["checks"], {"erc": True, "drc": True, "fail_on": "warning"})
+            self.assertEqual(cfg["checks"], {"erc": True, "drc": True, "dnp": True, "fail_on": "warning"})
 
     def test_invalid_fail_on_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as td:

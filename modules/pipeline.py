@@ -15,6 +15,7 @@ from .bom_generator import generate_bom_files
 from .checks import check_fails, describe_counts, load_report, run_drc, run_erc
 from .command_runner import NEEDS_DISPLAY_MESSAGE, display_prefix
 from .config_manager import resolve_relative_output
+from .dnp_check import describe_dnp, run_dnp_check
 from .external_tools import JLC_NOT_INSTALLED, _plugin_search_dirs, run_ibom_plugin, run_jlcpcb_plugin
 from .logger import close_file_handlers, get_logger
 from .pcb_export import (
@@ -45,6 +46,7 @@ RENDER_VIEWS = ("top", "bottom", "left", "right", "iso1", "iso2")
 STEP_CONFIG: Dict[str, Tuple[str, str]] = {
     "erc": ("checks", "erc"),
     "drc": ("checks", "drc"),
+    "dnp": ("checks", "dnp"),
     "schematic_pdf": ("exports", "sch_pdf"),
     "step": ("exports", "step"),
     "gerbers": ("exports", "gerbers"),
@@ -58,7 +60,7 @@ STEP_CONFIG: Dict[str, Tuple[str, str]] = {
     "ibom": ("integrations", "ibom"),
 }
 STEP_GROUPS: Dict[str, List[str]] = {
-    "checks": ["erc", "drc"],
+    "checks": ["erc", "drc", "dnp"],
     "sch_pdf": ["schematic_pdf"],
     "bom": ["bom_line_by_line", "bom_collapsed"],
     "renders": [],  # expanded from config, see expand_only()
@@ -138,7 +140,7 @@ def _count_export_steps(cfg: Dict[str, Any], only: Optional[Iterable[str]] = Non
 
 
 def compute_exit_code(results: Dict[str, Any]) -> int:
-    """0 = all OK, 1 = some step failed to run, 2 = ERC/DRC violations exceed ``fail_on``.
+    """0 = all OK, 1 = some step failed to run, 2 = ERC/DRC/DNP violations exceed ``fail_on``.
 
     A failed export takes precedence over failed checks: its outputs are incomplete.
     """
@@ -268,6 +270,18 @@ def run_export_pipeline(
 
     _run("erc", "Running ERC...", lambda: _check("erc"))
     _run("drc", "Running DRC (with schematic parity)...", lambda: _check("drc"))
+
+    def _dnp() -> Tuple[str, str, bool]:
+        if not sch_file.exists():
+            return "failed", missing_sch, False
+        summary = run_dnp_check(sch_file, pcb_file)
+        results["checks"]["dnp"] = summary
+        text = describe_dnp(summary)
+        if check_fails(summary, fail_on):
+            return "failed", f"{text} (fail_on={fail_on})", True
+        return "ok", text, False
+
+    _run("dnp", "Checking DNP/BOM/position attributes (schematic vs PCB)...", _dnp)
 
     # ------------------------------------------------------------------ exports
     paths = _section(cfg, "paths")

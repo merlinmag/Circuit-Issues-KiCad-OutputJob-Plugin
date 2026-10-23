@@ -108,17 +108,18 @@ class CliIntegrationTests(unittest.TestCase):
         self.assertEqual(summary["status"], "ok")
         steps = {s["name"]: s["status"] for s in summary["steps"]}
         expected = {
-            "erc", "drc", "schematic_pdf", "step", "gerbers", "drill", "position",
+            "erc", "drc", "dnp", "schematic_pdf", "step", "gerbers", "drill", "position",
             "bom_line_by_line", "bom_collapsed", "visual", "render_top",
         }
         if self.ibom:
             expected.add("ibom")
         self.assertEqual(set(steps), expected)
         self.assertTrue(all(status == "ok" for status in steps.values()), steps)
-        self.assertEqual(list(steps)[:2], ["erc", "drc"])
+        self.assertEqual(list(steps)[:3], ["erc", "drc", "dnp"])
         self.assertEqual(summary["checks"]["erc"]["errors"], 0)
         self.assertEqual(summary["checks"]["drc"]["errors"], 0)
         self.assertEqual(summary["checks"]["drc"]["parity"], 0)
+        self.assertEqual(summary["checks"]["dnp"]["errors"], 0)
 
     def test_expected_files_exist(self) -> None:
         files = self.runs[-1][1]
