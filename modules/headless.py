@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from typing import List, Optional
 
+from . import __version__
 from .config_manager import config_file_path, load_config, load_config_file
 from .pipeline import EXIT_EXPORT_FAILED, STEP_CONFIG, STEP_GROUPS, expand_only, run_export_pipeline
 
@@ -58,6 +59,7 @@ def build_parser() -> argparse.ArgumentParser:
             f"Steps for --only: {steps}"
         ),
     )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("project", type=Path, help="project directory, .kicad_pro or .kicad_pcb file")
     parser.add_argument(
         "--config",
