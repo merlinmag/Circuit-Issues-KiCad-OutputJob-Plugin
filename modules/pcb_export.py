@@ -78,8 +78,11 @@ def generate_drill_files(board_file: Path, output_dir: Path) -> CommandResult:
     return result
 
 
-def generate_position_files(board_file: Path, output_path: Path) -> CommandResult:
-    """Generate position/PNP CSV output file."""
+def generate_position_files(board_file: Path, output_path: Path, exclude_dnp: bool = True) -> CommandResult:
+    """Generate position/PNP CSV output file.
+
+    Footprints flagged "Do not populate" are left out unless ``exclude_dnp`` is False.
+    """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         kicad_cli_executable(),
@@ -88,6 +91,10 @@ def generate_position_files(board_file: Path, output_path: Path) -> CommandResul
         "pos",
         "--format",
         "csv",
+    ]
+    if exclude_dnp:
+        cmd.append("--exclude-dnp")
+    cmd += [
         "--output",
         str(output_path),
         str(board_file),

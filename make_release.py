@@ -3,7 +3,7 @@
 Cross-platform replacement for make_release.ps1.
 
 Usage:
-    python3 make_release.py --version 1.2.0 [--source DIR] [--out dist]
+    python3 make_release.py --version 1.2.1 [--source DIR] [--out dist]
 
 Archive layout (KiCad PCM): plugin files under ``plugins/``, ``metadata.json`` at the root.
 The packaged metadata.json lists only the packaged version, without the download fields

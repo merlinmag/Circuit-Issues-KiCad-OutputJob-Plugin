@@ -22,7 +22,8 @@
           "type": "string",
           "enum": ["2_layer_default", "4_layer", "6_layer", "8_layer", "all_enabled"]
         },
-        "visual": {"type": "boolean"}
+        "visual": {"type": "boolean"},
+        "position_include_dnp": {"type": "boolean"}
       }
     },
     "checks": {

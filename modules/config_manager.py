@@ -67,6 +67,9 @@ def validate_config(cfg: Dict[str, Any], project_root: Path) -> None:
             raise ValueError("Missing or invalid path setting: visual")
         resolve_relative_output(project_root, visual)
 
+    if not isinstance(cfg["exports"].get("position_include_dnp", False), bool):
+        raise ValueError("Invalid exports.position_include_dnp: expected true/false")
+
     checks = cfg.get("checks")
     if checks is not None:
         if not isinstance(checks, dict):

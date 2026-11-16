@@ -311,7 +311,11 @@ def run_export_pipeline(
 
     def _position() -> Tuple[str, str]:
         out = mfg_root / "placement" / f"{project_name}_POS.csv"
-        return _cmd_step(generate_position_files(pcb_file, out), out)
+        include_dnp = bool(exports.get("position_include_dnp", False))
+        status, detail = _cmd_step(generate_position_files(pcb_file, out, exclude_dnp=not include_dnp), out)
+        if status == "ok":
+            detail += " (DNP parts included)" if include_dnp else " (DNP parts excluded)"
+        return status, detail
 
     def _bom(style: str) -> Tuple[str, str]:
         if not sch_file.exists():

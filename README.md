@@ -10,7 +10,8 @@ The plugin can generate:
 - STEP 3D model
 - Gerbers
 - drill files
-- position / PNP CSV
+- position / PNP CSV (parts flagged "Do not populate" are left out by default; tick
+  "Include DNP parts in position / PNP file" or set `exports.position_include_dnp: true` to list them)
 - BOM CSV files
 - 3D render PNGs
 - SVGs for visual diffs (schematic sheets, PCB layers, top/bottom views)
@@ -228,7 +229,7 @@ Older versions wrote `kicad_postdesign_export.log` to the project root; it can b
 Build a release zip for KiCad's Plugin and Content Manager (any OS; `make_release.ps1` does the same on Windows):
 
 ```bash
-python3 make_release.py --version 1.2.0   # -> dist/circuit-issues-outputjob-v1.2.0.zip + metadata.json values
+python3 make_release.py --version 1.2.1   # -> dist/circuit-issues-outputjob-v1.2.1.zip + metadata.json values
 ```
 
 Attach the zip to the GitHub release `v<version>` so the `download_url` in `metadata.json` resolves.
