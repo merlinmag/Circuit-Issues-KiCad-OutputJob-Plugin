@@ -13,6 +13,7 @@
     "gerber_layer_preset": "2_layer_default",
     "drill": false,
     "position": false,
+    "position_include_dnp": false,
     "bom_collapsed": false,
     "bom_line_by_line": false,
     "visual": false

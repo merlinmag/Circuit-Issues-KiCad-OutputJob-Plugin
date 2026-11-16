@@ -12,5 +12,7 @@ Key rules:
 - Paths and checkbox states are restored on next run.
 - `checks` (`erc`, `drc`, `dnp`, `fail_on`: `error` | `warning` | `never`) controls the ERC/DRC/DNP checks that run first.
   `dnp` compares DNP, exclude-from-BOM and exclude-from-position-files between schematic symbols and PCB footprints.
+- `exports.position_include_dnp` (default `false`): when `false` the position/PNP CSV leaves out
+  footprints flagged "Do not populate" (`kicad-cli ... --exclude-dnp`); set `true` to list them.
 - `exports.visual` + `paths.visual` control the SVG export for visual diffs.
 - Settings missing from a saved file are taken from `config_defaults.json`.

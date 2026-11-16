@@ -122,6 +122,7 @@ if wx is not None:
                 ("gerbers", "Gerbers"),
                 ("drill", "Drill files"),
                 ("position", "Position / PNP"),
+                ("position_include_dnp", "    Include DNP parts in position / PNP file"),
                 ("bom_collapsed", "BOM (collapsed)"),
                 ("bom_line_by_line", "BOM (line-by-line)"),
                 ("visual", "SVGs for visual diff (schematic + PCB layers)"),

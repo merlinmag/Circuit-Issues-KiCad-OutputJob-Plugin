@@ -10,7 +10,8 @@ The plugin can generate:
 - STEP 3D model
 - Gerbers
 - drill files
-- position / PNP CSV
+- position / PNP CSV (parts flagged "Do not populate" are left out by default; tick
+  "Include DNP parts in position / PNP file" or set `exports.position_include_dnp: true` to list them)
 - BOM CSV files
 - 3D render PNGs
 - SVGs for visual diffs (schematic sheets, PCB layers, top/bottom views)
