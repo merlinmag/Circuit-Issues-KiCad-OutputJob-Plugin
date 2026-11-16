@@ -3,7 +3,7 @@
 Cross-platform replacement for make_release.ps1.
 
 Usage:
-    python3 make_release.py --version 1.2.1 [--source DIR] [--out dist]
+    python3 make_release.py --version 1.2.2 [--source DIR] [--out dist]
 
 Archive layout (KiCad PCM): plugin files under ``plugins/``, ``metadata.json`` at the root.
 The packaged metadata.json lists only the packaged version, without the download fields
@@ -17,6 +17,7 @@ import argparse
 import copy
 import hashlib
 import json
+import re
 import sys
 import zipfile
 from pathlib import Path
@@ -57,7 +58,16 @@ def _add(zf: zipfile.ZipFile, name: str, data: bytes) -> None:
     zf.writestr(info, data)
 
 
+def source_version(source: Path) -> str:
+    text = (source / "modules" / "__init__.py").read_text(encoding="utf-8")
+    match = re.search(r'^__version__\s*=\s*"([^"]+)"', text, re.M)
+    return match.group(1) if match else ""
+
+
 def build(source: Path, version: str, out_dir: Path) -> dict:
+    found = source_version(source)
+    if found != version:
+        raise SystemExit(f"modules/__init__.py has __version__ = {found!r}, expected {version!r}; update it first")
     out_dir.mkdir(parents=True, exist_ok=True)
     zip_name = f"circuit-issues-outputjob-v{version}.zip"
     zip_path = out_dir / zip_name

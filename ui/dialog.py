@@ -7,6 +7,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from ..modules import __version__
+
 try:
     import wx  # type: ignore
 except ImportError:  # pragma: no cover - only in non-KiCad environments
@@ -72,7 +74,7 @@ if wx is not None:
         """Single popup for config + execution trigger."""
 
         def __init__(self, parent: Optional[object], config: Dict[str, Any], project_root: Optional[Path] = None) -> None:
-            super().__init__(parent, title="Circuit-Issues-KiCad-OutputJob-Plugin", size=(760, 700))
+            super().__init__(parent, title=f"Circuit-Issues-KiCad-OutputJob-Plugin v{__version__}", size=(760, 700))
             self._cfg = deepcopy(config)
             self._project_root = project_root
             self._path_ctrls: Dict[str, Any] = {}
